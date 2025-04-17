@@ -3,17 +3,15 @@ import { SearchInputComponent } from '../../components/search-input/search-input
 import { CountryListComponent } from '../../components/country-list/country-list.component';
 import { CountryService } from '../../services/country.service';
 import { of } from 'rxjs';
-
 import { rxResource } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
-  selector: 'app-by-capital-page',
-  standalone: true,
+  selector: 'app-by-country-page',
   imports: [SearchInputComponent, CountryListComponent],
-  templateUrl: './by-capital-page.component.html',
+  templateUrl: './by-country-page.component.html',
 })
-export class ByCapitalPageComponent {
+export class ByCountryPageComponent {
   countryService = inject(CountryService);
 
   activateRoute = inject(ActivatedRoute);
@@ -29,37 +27,27 @@ export class ByCapitalPageComponent {
     loader: ({ request }) => {
       if (!request.query) return of([]);
 
-      this.router.navigate(['/country/by-capital'], {
+      this.router.navigate(['/country/by-country'], {
         queryParams: {
           query: request.query,
         },
       });
-
-      return this.countryService.searchByCapital(request.query);
+      return this.countryService.searchByCountry(request.query);
     },
   });
 
   /*
-  isLoading = signal(false);
-  isError = signal<string | null>(null);
-  countries = signal<Country[]>([]);
-  onSearch(query: string) {
-    if (this.isLoading()) return;
+  countryResource = resource({
+    request: () => ({
+      query: this.query(),
+    }),
+    loader: async ({ request }) => {
+      if (!request.query) return [];
 
-    this.isLoading.set(true);
-    this.isError.set(null);
-
-    this.countryService.searchByCapital(query).subscribe({
-      next: (countries) => {
-        this.isLoading.set(false);
-        this.countries.set(countries);
-      },
-      error: (err) => {
-        this.isLoading.set(false);
-        this.countries.set([]);
-        this.isError.set(`No se encontró un país con esa capital: ${query}`);
+      return await firstValueFrom(
+        this.countryService.searchByCountry(request.query)
+        );
       },
     });
-  }
-  */
+    */
 }
